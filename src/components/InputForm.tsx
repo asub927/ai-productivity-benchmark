@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
+import { InputFormProps, TaskData } from '../types';
 import styles from './InputForm.module.css';
 
-const InputForm = ({ onAddTask, onClear }) => {
-    const [task, setTask] = useState('');
-    const [humanTime, setHumanTime] = useState('');
-    const [aiTime, setAiTime] = useState('');
-    const [error, setError] = useState('');
+const InputForm: React.FC<InputFormProps> = ({ onAddTask, onClear }) => {
+    const [task, setTask] = useState<string>('');
+    const [humanTime, setHumanTime] = useState<string>('');
+    const [aiTime, setAiTime] = useState<string>('');
+    const [error, setError] = useState<string>('');
 
-    const handleSubmit = (e) => {
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
         e.preventDefault();
         setError('');
 
@@ -20,11 +21,13 @@ const InputForm = ({ onAddTask, onClear }) => {
                 return;
             }
 
-            onAddTask({
+            const newTask: TaskData = {
                 task,
                 humanTime: hTime,
                 aiTime: aTime,
-            });
+            };
+
+            onAddTask(newTask);
             setTask('');
             setHumanTime('');
             setAiTime('');
