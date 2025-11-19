@@ -103,22 +103,51 @@ const Chart: React.FC<ChartProps> = ({ data }) => {
                         // If values are close (e.g. within 10% of maxTime), labels might overlap
                         const isOverlapping = Math.abs(humanPercent - aiPercent) < 12;
 
+                        // Minimum percentage threshold to prevent labels from going into task name area
+                        // If a value is less than 25%, it might overlap with task names when positioned left
+                        const MIN_PERCENT_FOR_LEFT_LABEL = 25;
+
                         // Determine label positions
-                        // Smaller value gets label on the LEFT
-                        // Larger value gets label on the RIGHT
+                        // Strategy: Smaller value on LEFT, larger on RIGHT, unless value is too small
+                        // Special case: if BOTH are below threshold, still use left/right to avoid overlap
                         let aiLabelClass = styles.labelRight;
                         let humanLabelClass = styles.labelLeft;
 
+                        const aiTooSmall = aiPercent < MIN_PERCENT_FOR_LEFT_LABEL;
+                        const humanTooSmall = humanPercent < MIN_PERCENT_FOR_LEFT_LABEL;
+
                         if (aiPercent < humanPercent) {
-                            aiLabelClass = styles.labelLeft;
-                            humanLabelClass = styles.labelRight;
+                            // AI is smaller
+                            if (aiTooSmall && !humanTooSmall) {
+                                // Only AI is too small - force it RIGHT, Human stays RIGHT
+                                aiLabelClass = styles.labelRight;
+                                humanLabelClass = styles.labelRight;
+                            } else {
+                                // Normal case or both too small - use standard positioning
+                                aiLabelClass = styles.labelLeft;
+                                humanLabelClass = styles.labelRight;
+                            }
                         } else if (aiPercent > humanPercent) {
-                            aiLabelClass = styles.labelRight;
-                            humanLabelClass = styles.labelLeft;
+                            // Human is smaller
+                            if (humanTooSmall && !aiTooSmall) {
+                                // Only Human is too small - force it RIGHT, AI stays RIGHT
+                                aiLabelClass = styles.labelRight;
+                                humanLabelClass = styles.labelRight;
+                            } else {
+                                // Normal case or both too small - use standard positioning
+                                aiLabelClass = styles.labelRight;
+                                humanLabelClass = styles.labelLeft;
+                            }
                         } else {
-                            // Equal values - default to AI left, Human right
-                            aiLabelClass = styles.labelLeft;
-                            humanLabelClass = styles.labelRight;
+                            // Equal values - default to AI left, Human right (unless both too small)
+                            if (aiTooSmall) {
+                                // Both are equal and too small - both go RIGHT
+                                aiLabelClass = styles.labelRight;
+                                humanLabelClass = styles.labelRight;
+                            } else {
+                                aiLabelClass = styles.labelLeft;
+                                humanLabelClass = styles.labelRight;
+                            }
                         }
 
                         return (
