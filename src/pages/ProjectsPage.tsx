@@ -97,7 +97,7 @@ const ProjectsPage: React.FC = () => {
                                         <td className={styles.td}>
                                             <div className={styles.actions}>
                                                 <button
-                                                    className={styles.actionButton}
+                                                    className={styles.manageButton}
                                                     onClick={() => toggleExpand(project.id)}
                                                 >
                                                     {expandedProjectId === project.id ? 'Collapse' : 'Manage Tasks'}

@@ -47,7 +47,7 @@ const Header: React.FC<HeaderProps> = ({ data }) => {
 
                 {/* Widget 3: Productivity Gain */}
                 <div className={styles.widgetWrapper}>
-                    <span className={styles.widgetLabel}>Productivity Gain</span>
+                    <span className={`${styles.widgetLabel} ${styles.widgetLabelGain}`}>Productivity Gain</span>
                     <div className={`${styles.widget} ${styles.widgetGain}`}>
                         <div className={styles.widgetContent}>
                             {totalAiTime > 0 ? (

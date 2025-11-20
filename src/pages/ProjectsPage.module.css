@@ -165,6 +165,23 @@
     background: var(--color-bg-app);
 }
 
+.manageButton {
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    border: none;
+    background: var(--color-primary);
+    color: white;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.manageButton:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
 .deleteButton {
     color: var(--color-danger);
     border-color: rgba(211, 47, 47, 0.2);
