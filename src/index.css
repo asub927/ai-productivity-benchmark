@@ -1,20 +1,25 @@
 :root {
-  --neon-cyan: #00FFFF;
-  --deep-blue: #003366;
-  --bg-black: #050510;
+  /* Exact colors from McKinsey site/image */
+  --mck-navy: #051C2C;
+  --mck-blue: #004B87;
+  --mck-cyan: #00A9E0;
+  --mck-gray: #E0E0E0;
+  --mck-text-primary: #000000;
+  --mck-text-secondary: #333333;
+  --mck-bg: #FFFFFF;
+
+  /* Font Stacks */
+  --font-sans: "McKinsey Sans", "Helvetica Neue", Calibri, Corbel, Helvetica, Roboto, Droid, sans-serif;
+  --font-serif: "Georgia", "Times New Roman", Times, serif;
+  /* For the big numbers in the dashboard */
 }
 
 body {
   margin: 0;
   padding: 0;
-  background-color: var(--bg-black);
-  background-image:
-    radial-gradient(circle at 50% 0%, rgba(0, 255, 255, 0.1) 0%, transparent 50%),
-    linear-gradient(rgba(0, 51, 102, 0.1) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 51, 102, 0.1) 1px, transparent 1px);
-  background-size: 100% 100%, 50px 50px, 50px 50px;
-  color: #fff;
-  font-family: 'Inter', sans-serif;
+  background-color: var(--mck-bg);
+  color: var(--mck-text-secondary);
+  font-family: var(--font-sans);
   min-height: 100vh;
   overflow-x: hidden;
 }
@@ -29,14 +34,14 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #050510;
+  background: #f0f0f0;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #003366;
+  background: var(--mck-navy);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #00FFFF;
+  background: var(--mck-blue);
 }

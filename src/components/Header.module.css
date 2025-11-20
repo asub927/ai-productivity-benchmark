@@ -7,7 +7,7 @@
   max-width: 1000px;
   margin-left: auto;
   margin-right: auto;
-  padding: 0 2rem;
+  padding: 2rem 2rem 0;
   gap: 2rem;
 }
 
@@ -16,18 +16,16 @@
   flex-direction: column;
   align-items: center;
   position: relative;
-  /* For absolute positioning of subtitle */
 }
 
 .title {
-  font-family: 'Inter', sans-serif;
-  font-size: 4.5rem;
-  /* Increased from 3.5rem */
-  font-weight: 900;
+  font-family: var(--font-sans);
+  font-size: 3.5rem;
+  /* Slightly smaller for cleaner look */
+  font-weight: 700;
   margin: 0;
   line-height: 1.1;
-  text-transform: uppercase;
-  letter-spacing: -1px;
+  color: var(--mck-text-primary);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -35,36 +33,28 @@
 }
 
 .human {
-  color: transparent;
-  -webkit-text-stroke: 2px #00FFFF;
-  text-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+  color: var(--mck-text-primary);
 }
 
 .vs {
-  font-size: 3rem;
-  color: #fff;
+  font-size: 2rem;
+  color: var(--mck-text-secondary);
   font-style: italic;
-  font-family: serif;
+  font-family: var(--font-serif);
+  opacity: 0.6;
 }
 
 .ai {
-  background: linear-gradient(180deg, #00FFFF 0%, #0088FF 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  text-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+  color: var(--mck-blue);
+  /* Use Medium Blue for emphasis */
 }
 
 .subtitle {
-  font-family: 'Inter', sans-serif;
-  background: linear-gradient(90deg, #888, #ccc, #888);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  font-size: 1.5rem;
-  /* Increased from 1.2rem */
-  font-weight: 700;
+  font-family: var(--font-sans);
+  color: var(--mck-text-secondary);
+  font-size: 1.1rem;
+  font-weight: 400;
   margin-top: 0.5rem;
-  letter-spacing: 1px;
   position: absolute;
   top: 100%;
   left: 50%;
@@ -80,69 +70,68 @@
 }
 
 .widget {
-  width: 180px;
-  /* Increased from 140px */
-  height: 160px;
-  /* Increased from 120px */
+  width: 160px;
+  height: 140px;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
-  filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.5));
-  /* Drop shadow for the whole shape */
   transition: transform 0.3s ease;
   flex-shrink: 0;
-  clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
-  padding: 4px;
-  /* Increased border width slightly */
+  border: 1px solid var(--mck-gray);
+  background: #fff;
+  border-radius: 4px;
+  /* Sharper corners like the reference */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .widgetContent {
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.8);
-  /* Inner background */
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
+  /* Left align content like reference */
   justify-content: center;
-  clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+  padding-left: 1.5rem;
 }
 
 .widget:hover {
-  transform: scale(1.05);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .widgetHuman {
-  background: #0088FF;
-  /* Border color matching human dot */
+  border-top: 4px solid var(--mck-navy);
 }
 
 .widgetAi {
-  background: linear-gradient(180deg, #00FFFF 0%, #0088FF 100%);
-  /* Border color matching AI gradient */
+  border-top: 4px solid var(--mck-cyan);
 }
 
 .widgetLabel {
-  font-size: 1rem;
-  /* Increased from 0.75rem */
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  color: #aaa;
-  font-weight: 700;
+  font-size: 0.8rem;
+  line-height: 1.2;
+  color: var(--mck-text-secondary);
+  font-weight: 400;
+  margin-bottom: 0.5rem;
+  font-family: var(--font-sans);
+  text-align: left;
+  max-width: 80%;
 }
 
 .widgetValue {
-  font-size: 2rem;
-  /* Increased from 1.5rem */
-  font-weight: 800;
-  color: #fff;
+  font-size: 3rem;
+  font-weight: 400;
+  font-family: var(--font-serif);
+  /* Serif for the big number */
+  color: var(--mck-text-primary);
 }
 
 .efficiencyBadge {
-  font-size: 1.2rem;
-  /* Increased from 0.9rem */
-  color: #00FFFF;
+  font-size: 0.9rem;
+  color: var(--mck-blue);
   margin-top: 0.2rem;
-  font-weight: 700;
+  font-weight: 600;
+  font-family: var(--font-sans);
 }
