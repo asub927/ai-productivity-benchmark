@@ -162,16 +162,18 @@ const Chart: React.FC<ChartProps> = ({ data, onDeleteTask }) => {
                         return (
                             <div key={index} className={styles.row}>
                                 <div className={styles.labelContainer}>
+                                    <div className={styles.deleteColumn}>
+                                        <button
+                                            className={styles.deleteButton}
+                                            onClick={() => onDeleteTask(index)}
+                                            aria-label={`Delete ${item.task}`}
+                                            title="Delete task"
+                                        >
+                                            ×
+                                        </button>
+                                    </div>
                                     <div className={styles.projectLabel}>{item.projectName}</div>
                                     <div className={styles.taskLabel}>{item.task}</div>
-                                    <button
-                                        className={styles.deleteButton}
-                                        onClick={() => onDeleteTask(index)}
-                                        aria-label={`Delete ${item.task}`}
-                                        title="Delete task"
-                                    >
-                                        ×
-                                    </button>
                                 </div>
                                 <div className={styles.barContainer}>
                                     {/* Connecting Line */}

@@ -101,22 +101,33 @@
 }
 
 .labelContainer {
-    width: 300px;
-    /* Increased from 200px */
+    width: 340px;
+    /* Increased to 340px (40 + 150 + 150) */
     display: flex;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: flex-start;
+    /* Changed to flex-start */
     gap: 0;
     padding-right: 0;
     flex-shrink: 0;
     border-right: 1px solid rgba(255, 255, 255, 0.3);
-    /* Vertical separator between task names and chart - increased opacity */
+    /* Vertical separator between task names and chart */
     position: relative;
+}
+
+.deleteColumn {
+    width: 40px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-right: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .projectLabel {
     width: 150px;
-    text-align: left;
+    text-align: center;
+    /* Centered */
     font-size: 0.9rem;
     color: #a0a0a0;
     /* Slightly dimmer than task */
@@ -124,24 +135,33 @@
     /* Bold */
     text-transform: uppercase;
     /* Uppercase */
-    padding-left: 1rem;
-    padding-right: 0.5rem;
+    padding: 0 0.5rem;
+    /* Adjusted padding */
     word-wrap: break-word;
-    border-right: 1px solid rgba(255, 255, 255, 0.1);
-    /* Separator between project and task */
+    border-right: 1px solid rgba(255, 255, 255, 0.3);
+    /* Consistent separator */
     height: 100%;
     display: flex;
     align-items: center;
+    justify-content: center;
+    /* Centered */
 }
 
 .taskLabel {
     width: 150px;
-    text-align: right;
+    text-align: center;
+    /* Centered */
     font-size: 0.9rem;
     color: #e0e0e0;
+    /* Brighter white for task name */
+    padding: 0 0.5rem;
+    /* Adjusted padding */
     word-wrap: break-word;
-    padding-right: 1rem;
-    padding-left: 0.5rem;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Centered */
 }
 
 .barContainer {
