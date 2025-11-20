@@ -4,16 +4,22 @@ import Layout from './components/Layout';
 import Dashboard from './pages/Dashboard';
 import Reports from './pages/Reports';
 
+import { ProjectProvider } from './context/ProjectContext';
+import ProjectsPage from './pages/ProjectsPage';
+
 const App: React.FC = () => {
     return (
-        <BrowserRouter>
-            <Layout>
-                <Routes>
-                    <Route path="/" element={<Dashboard />} />
-                    <Route path="/reports" element={<Reports />} />
-                </Routes>
-            </Layout>
-        </BrowserRouter>
+        <ProjectProvider>
+            <BrowserRouter>
+                <Layout>
+                    <Routes>
+                        <Route path="/" element={<Dashboard />} />
+                        <Route path="/reports" element={<Reports />} />
+                        <Route path="/projects" element={<ProjectsPage />} />
+                    </Routes>
+                </Layout>
+            </BrowserRouter>
+        </ProjectProvider>
     );
 }
 

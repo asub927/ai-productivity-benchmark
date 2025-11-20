@@ -33,3 +33,12 @@ export interface ConfirmationModalProps {
     onConfirm: () => void;
     message: string;
 }
+
+/**
+ * Represents a project with associated tasks
+ */
+export interface Project {
+    id: string;
+    name: string;
+    tasks: string[];
+}
