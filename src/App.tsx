@@ -32,7 +32,7 @@ const App: React.FC = () => {
 
     return (
         <div className="app-container" style={{ padding: '2rem' }}>
-            <Header />
+            <Header data={data} />
             <InputForm onAddTask={handleAddTask} onClear={handleClearClick} />
             <Chart data={data} onDeleteTask={handleDeleteTask} />
             <ConfirmationModal

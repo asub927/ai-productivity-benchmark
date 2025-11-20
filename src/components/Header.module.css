@@ -1,7 +1,20 @@
 .header {
   text-align: center;
   margin-bottom: 3rem;
-  padding-top: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 2rem;
+  gap: 2rem;
+}
+
+.titleContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .title {
@@ -9,9 +22,9 @@
   font-size: 3.5rem;
   font-weight: 900;
   margin: 0;
-  line-height: 1;
+  line-height: 1.1;
   text-transform: uppercase;
-  letter-spacing: 2px;
+  letter-spacing: -1px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -40,12 +53,74 @@
 
 .subtitle {
   font-family: 'Inter', sans-serif;
-  background: linear-gradient(90deg, #00FFFF 0%, #0088FF 50%, #00FFFF 100%);
-  -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   font-size: 1.2rem;
   font-weight: 700;
   margin-top: 0.5rem;
   letter-spacing: 1px;
+}
+
+.widget {
+  width: 140px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.5));
+  /* Drop shadow for the whole shape */
+  transition: transform 0.3s ease;
+  flex-shrink: 0;
+  clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+  padding: 3px;
+  /* Acts as border width */
+}
+
+.widgetContent {
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  /* Inner background */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+}
+
+.widget:hover {
+  transform: scale(1.05);
+}
+
+.widgetHuman {
+  background: #e0e0e0;
+  /* Border color */
+}
+
+.widgetAi {
+  background: #00FFFF;
+  /* Border color */
+}
+
+.widgetLabel {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 0.2rem;
+  color: #aaa;
+  font-weight: 600;
+}
+
+.widgetValue {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #fff;
+}
+
+.efficiencyBadge {
+  font-size: 0.7rem;
+  color: #00FFFF;
+  margin-top: 0.2rem;
+  font-weight: 700;
 }
