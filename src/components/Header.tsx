@@ -18,14 +18,16 @@ const Header: React.FC<HeaderProps> = ({ data }) => {
     return (
         <header className={styles.header}>
             {/* Left Widget: With AI & Efficiency */}
-            <div className={`${styles.widget} ${styles.widgetAi}`}>
-                <div className={styles.widgetContent}>
-                    <span className={styles.widgetLabel}>With AI</span>
-                    <span className={styles.widgetValue}>{totalAiTime}m</span>
-                    {totalAiTime > 0 && (
-                        <span className={styles.efficiencyBadge}>{speedup}x Faster</span>
-                    )}
+            <div className={styles.widgetWrapper}>
+                <div className={`${styles.widget} ${styles.widgetAi}`}>
+                    <div className={styles.widgetContent}>
+                        <span className={styles.widgetValue}>{totalAiTime}m</span>
+                        {totalAiTime > 0 && (
+                            <span className={styles.efficiencyBadge}>{speedup}x Faster</span>
+                        )}
+                    </div>
                 </div>
+                <span className={styles.widgetLabel}>With AI</span>
             </div>
 
             <div className={styles.titleContainer}>
@@ -38,11 +40,13 @@ const Header: React.FC<HeaderProps> = ({ data }) => {
             </div>
 
             {/* Right Widget: Without AI */}
-            <div className={`${styles.widget} ${styles.widgetHuman}`}>
-                <div className={styles.widgetContent}>
-                    <span className={styles.widgetLabel}>Without AI</span>
-                    <span className={styles.widgetValue}>{totalHumanTime}m</span>
+            <div className={styles.widgetWrapper}>
+                <div className={`${styles.widget} ${styles.widgetHuman}`}>
+                    <div className={styles.widgetContent}>
+                        <span className={styles.widgetValue}>{totalHumanTime}m</span>
+                    </div>
                 </div>
+                <span className={styles.widgetLabel}>Without AI</span>
             </div>
         </header>
     );

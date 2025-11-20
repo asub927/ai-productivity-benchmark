@@ -70,7 +70,7 @@ const InputForm: React.FC<InputFormProps> = ({ onAddTask, onClear }) => {
             />
             <input
                 type="number"
-                placeholder="With AI Assistance (min)"
+                placeholder="With AI (min)"
                 value={aiTime}
                 onChange={(e) => setAiTime(e.target.value)}
                 className={styles.input}

@@ -21,7 +21,8 @@
 
 .title {
   font-family: 'Inter', sans-serif;
-  font-size: 3.5rem;
+  font-size: 4.5rem;
+  /* Increased from 3.5rem */
   font-weight: 900;
   margin: 0;
   line-height: 1.1;
@@ -59,7 +60,8 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  font-size: 1.2rem;
+  font-size: 1.5rem;
+  /* Increased from 1.2rem */
   font-weight: 700;
   margin-top: 0.5rem;
   letter-spacing: 1px;
@@ -70,9 +72,18 @@
   width: max-content;
 }
 
+.widgetWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+}
+
 .widget {
-  width: 140px;
-  height: 120px;
+  width: 180px;
+  /* Increased from 140px */
+  height: 160px;
+  /* Increased from 120px */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -82,8 +93,8 @@
   transition: transform 0.3s ease;
   flex-shrink: 0;
   clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
-  padding: 3px;
-  /* Acts as border width */
+  padding: 4px;
+  /* Increased border width slightly */
 }
 
 .widgetContent {
@@ -113,22 +124,24 @@
 }
 
 .widgetLabel {
-  font-size: 0.75rem;
+  font-size: 1rem;
+  /* Increased from 0.75rem */
   text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-bottom: 0.2rem;
+  letter-spacing: 2px;
   color: #aaa;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .widgetValue {
-  font-size: 1.5rem;
+  font-size: 2rem;
+  /* Increased from 1.5rem */
   font-weight: 800;
   color: #fff;
 }
 
 .efficiencyBadge {
-  font-size: 0.7rem;
+  font-size: 0.9rem;
+  /* Increased from 0.7rem */
   color: #00FFFF;
   margin-top: 0.2rem;
   font-weight: 700;

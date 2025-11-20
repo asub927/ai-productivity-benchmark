@@ -52,7 +52,7 @@ const Chart: React.FC<ChartProps> = ({ data, onDeleteTask }) => {
                             className={styles.legendBoxAi}
                             style={{ transform: `translateX(${aiLegendShift}%)` }}
                         >
-                            With AI Assistance
+                            With AI
                         </div>
                         <div className={styles.legendArrowAi}></div>
                     </div>
