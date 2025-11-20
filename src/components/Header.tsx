@@ -15,13 +15,20 @@ const Header: React.FC<HeaderProps> = ({ data }) => {
     // Avoid division by zero
     const speedup = totalAiTime > 0 ? (totalHumanTime / totalAiTime).toFixed(1) : '0.0';
 
+    const formatTime = (minutes: number): string => {
+        if (minutes > 100) {
+            return (minutes / 60).toFixed(1) + 'h';
+        }
+        return minutes + 'm';
+    };
+
     return (
         <header className={styles.header}>
             {/* Left Widget: With AI & Efficiency */}
             <div className={styles.widgetWrapper}>
                 <div className={`${styles.widget} ${styles.widgetAi}`}>
                     <div className={styles.widgetContent}>
-                        <span className={styles.widgetValue}>{totalAiTime}m</span>
+                        <span className={styles.widgetValue}>{formatTime(totalAiTime)}</span>
                         {totalAiTime > 0 && (
                             <span className={styles.efficiencyBadge}>{speedup}x Faster</span>
                         )}
@@ -43,7 +50,7 @@ const Header: React.FC<HeaderProps> = ({ data }) => {
             <div className={styles.widgetWrapper}>
                 <div className={`${styles.widget} ${styles.widgetHuman}`}>
                     <div className={styles.widgetContent}>
-                        <span className={styles.widgetValue}>{totalHumanTime}m</span>
+                        <span className={styles.widgetValue}>{formatTime(totalHumanTime)}</span>
                     </div>
                 </div>
                 <span className={styles.widgetLabel}>Without AI</span>

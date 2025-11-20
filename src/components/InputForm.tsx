@@ -61,18 +61,18 @@ const InputForm: React.FC<InputFormProps> = ({ onAddTask, onClear }) => {
             />
             <input
                 type="number"
-                placeholder="Without AI (min)"
-                value={humanTime}
-                onChange={(e) => setHumanTime(e.target.value)}
+                placeholder="With AI (min)"
+                value={aiTime}
+                onChange={(e) => setAiTime(e.target.value)}
                 className={styles.input}
                 min="0"
                 required
             />
             <input
                 type="number"
-                placeholder="With AI (min)"
-                value={aiTime}
-                onChange={(e) => setAiTime(e.target.value)}
+                placeholder="Without AI (min)"
+                value={humanTime}
+                onChange={(e) => setHumanTime(e.target.value)}
                 className={styles.input}
                 min="0"
                 required

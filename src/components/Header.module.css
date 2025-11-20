@@ -140,8 +140,8 @@
 }
 
 .efficiencyBadge {
-  font-size: 0.9rem;
-  /* Increased from 0.7rem */
+  font-size: 1.2rem;
+  /* Increased from 0.9rem */
   color: #00FFFF;
   margin-top: 0.2rem;
   font-weight: 700;
