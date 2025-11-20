@@ -17,11 +17,14 @@ const Header: React.FC<HeaderProps> = ({ data }) => {
 
     return (
         <header className={styles.header}>
-            {/* Left Widget: Without AI */}
-            <div className={`${styles.widget} ${styles.widgetHuman}`}>
+            {/* Left Widget: With AI & Efficiency */}
+            <div className={`${styles.widget} ${styles.widgetAi}`}>
                 <div className={styles.widgetContent}>
-                    <span className={styles.widgetLabel}>Without AI</span>
-                    <span className={styles.widgetValue}>{totalHumanTime}m</span>
+                    <span className={styles.widgetLabel}>With AI</span>
+                    <span className={styles.widgetValue}>{totalAiTime}m</span>
+                    {totalAiTime > 0 && (
+                        <span className={styles.efficiencyBadge}>{speedup}x Faster</span>
+                    )}
                 </div>
             </div>
 
@@ -34,14 +37,11 @@ const Header: React.FC<HeaderProps> = ({ data }) => {
                 <h2 className={styles.subtitle}>Compare task completion times with and without AI</h2>
             </div>
 
-            {/* Right Widget: With AI & Efficiency */}
-            <div className={`${styles.widget} ${styles.widgetAi}`}>
+            {/* Right Widget: Without AI */}
+            <div className={`${styles.widget} ${styles.widgetHuman}`}>
                 <div className={styles.widgetContent}>
-                    <span className={styles.widgetLabel}>With AI</span>
-                    <span className={styles.widgetValue}>{totalAiTime}m</span>
-                    {totalAiTime > 0 && (
-                        <span className={styles.efficiencyBadge}>{speedup}x Faster</span>
-                    )}
+                    <span className={styles.widgetLabel}>Without AI</span>
+                    <span className={styles.widgetValue}>{totalHumanTime}m</span>
                 </div>
             </div>
         </header>

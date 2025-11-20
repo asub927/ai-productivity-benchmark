@@ -103,13 +103,13 @@
 }
 
 .widgetHuman {
-  background: #e0e0e0;
-  /* Border color */
+  background: #0088FF;
+  /* Border color matching human dot */
 }
 
 .widgetAi {
-  background: #00FFFF;
-  /* Border color */
+  background: linear-gradient(180deg, #00FFFF 0%, #0088FF 100%);
+  /* Border color matching AI gradient */
 }
 
 .widgetLabel {
