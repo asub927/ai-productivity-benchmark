@@ -1,4 +1,5 @@
 import React from 'react';
+import { NavLink } from 'react-router-dom';
 import styles from './Layout.module.css';
 
 interface LayoutProps {
@@ -35,7 +36,12 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                     </button>
                 </div>
                 <nav className={styles.nav}>
-                    <a href="#" className={`${styles.navItem} ${styles.navItemActive}`} title="Dashboard">
+                    <NavLink
+                        to="/"
+                        className={({ isActive }) => `${styles.navItem} ${isActive ? styles.navItemActive : ''}`}
+                        title="Dashboard"
+                        end
+                    >
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                             <rect x="3" y="3" width="7" height="7"></rect>
                             <rect x="14" y="3" width="7" height="7"></rect>
@@ -43,8 +49,12 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                             <rect x="3" y="14" width="7" height="7"></rect>
                         </svg>
                         {!isCollapsed && <span>Dashboard</span>}
-                    </a>
-                    <a href="#" className={styles.navItem} title="Reports">
+                    </NavLink>
+                    <NavLink
+                        to="/reports"
+                        className={({ isActive }) => `${styles.navItem} ${isActive ? styles.navItemActive : ''}`}
+                        title="Reports"
+                    >
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                             <polyline points="14 2 14 8 20 8"></polyline>
@@ -53,7 +63,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                             <polyline points="10 9 9 9 8 9"></polyline>
                         </svg>
                         {!isCollapsed && <span>Reports</span>}
-                    </a>
+                    </NavLink>
                     <a href="#" className={styles.navItem} title="Settings">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                             <circle cx="12" cy="12" r="3"></circle>
