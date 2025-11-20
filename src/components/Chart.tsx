@@ -1,5 +1,5 @@
 import React from 'react';
-import { ChartProps, TaskData } from '../types';
+import { ChartProps } from '../types';
 import styles from './Chart.module.css';
 
 const Chart: React.FC<ChartProps> = ({ data, onDeleteTask }) => {
@@ -18,23 +18,84 @@ const Chart: React.FC<ChartProps> = ({ data, onDeleteTask }) => {
     const humanLegendPosition = humanDotPercent;
 
     // Legend Collision Detection
-    // If the legend positions are close, the legends (which are wide) might overlap.
     const percentDiff = Math.abs(aiLegendPosition - humanLegendPosition);
-    const isLegendOverlapping = percentDiff < 30; // Reduced threshold for legend overlap
+    const isLegendOverlapping = percentDiff < 30;
 
     let aiLegendShift = 0;
     let humanLegendShift = 0;
 
     if (isLegendOverlapping) {
-        // Shift away from each other with much more aggressive distance
+        // Shift away from each other
+        // BUT check if we are near the edges to avoid overflow
+
+        // If AI is on the left of Human
         if (aiLegendPosition < humanLegendPosition) {
-            aiLegendShift = -40; // Shift AI left (very aggressive)
-            humanLegendShift = 40; // Shift Human right (very aggressive)
+            // AI shifts Left, Human shifts Right
+            // Check if Human is too far right (e.g. > 80%)
+            if (humanLegendPosition > 80) {
+                // Cannot shift Human right. Shift AI further left?
+                // Or shift both left?
+                aiLegendShift = -50;
+                humanLegendShift = -10; // Shift Human slightly left instead of right
+            } else {
+                aiLegendShift = -40;
+                humanLegendShift = 40;
+            }
         } else {
-            aiLegendShift = 40; // Shift AI right (very aggressive)
-            humanLegendShift = -40; // Shift Human left (very aggressive)
+            // AI shifts Right, Human shifts Left
+            // Check if AI is too far right
+            if (aiLegendPosition > 80) {
+                aiLegendShift = -10; // Shift AI slightly left
+                humanLegendShift = -50; // Shift Human further left
+            } else {
+                aiLegendShift = 40;
+                humanLegendShift = -40;
+            }
         }
     }
+
+    // Additional Clamp: If any legend is extremely close to 100% (e.g. > 85%), 
+    // ensure its internal transform pulls it back.
+    if (!isLegendOverlapping) {
+        if (humanLegendPosition > 85) {
+            humanLegendShift = -40; // Pull back left
+        } else if (humanLegendPosition < 15) {
+            humanLegendShift = 40; // Push right
+        }
+
+        if (aiLegendPosition > 85) {
+            aiLegendShift = -40; // Pull back left
+        } else if (aiLegendPosition < 15) {
+            aiLegendShift = 40; // Push right
+        }
+    } else {
+        // If overlapping AND near edge, we need to be careful
+        // (The previous logic handled some of this, but let's refine it)
+        // If Human is at 100% and AI is at 95%, they overlap.
+        // We want Human to be -50 (left) and AI to be -100 (further left)? 
+        // Or Human -40 (left) and AI -90?
+        // The current overlap logic shifts them apart by +/- 40.
+        // If we are at the right edge, we can't shift Right.
+
+        // Re-evaluating overlap logic for edges:
+        if (aiLegendPosition < humanLegendPosition) {
+            // AI Left, Human Right
+            if (humanLegendPosition > 85) {
+                // Human is at edge, force it Left
+                humanLegendShift = -40;
+                // AI must go further Left
+                aiLegendShift = -90;
+            }
+        } else {
+            // AI Right, Human Left
+            if (aiLegendPosition > 85) {
+                aiLegendShift = -40;
+                humanLegendShift = -90;
+            }
+        }
+    }
+
+    // (The logic above handles the overlap case. For non-overlap, shifts are 0, so standard centering applies).
 
     return (
         <div className={styles.chartContainer}>
@@ -90,54 +151,48 @@ const Chart: React.FC<ChartProps> = ({ data, onDeleteTask }) => {
                         const aiPercent = (item.aiTime / maxTime) * 100;
 
                         // Check for overlap between labels
-                        // If values are close (e.g. within 12% of maxTime), labels might overlap
-                        const isOverlapping = Math.abs(humanPercent - aiPercent) < 12;
+                        // If values are close (e.g. within 8% of maxTime), labels might overlap
+                        const isOverlapping = Math.abs(humanPercent - aiPercent) < 8;
 
-                        // Check if labels are too close to the horizontal chart line
-                        // Small percentage values position labels near the line, causing overlap
-                        const CHART_LINE_THRESHOLD = 25; // Increased to 25% with safety margin
-                        const aiNearLine = aiPercent < CHART_LINE_THRESHOLD;
-                        const humanNearLine = humanPercent < CHART_LINE_THRESHOLD;
+                        // Check if labels overlap with the connecting line
+                        // Overlap occurs if:
+                        // 1. AI < Human (Line to Right) AND AI Label is Right
+                        // 2. AI > Human (Line to Left) AND AI Label is Left
+                        // Same logic applies to Human label
 
-                        // Minimum percentage threshold to prevent labels from going into task name area
-                        // If a value is less than 25%, it might overlap with task names when positioned left
+                        // We need to determine label classes first to check for line overlap
+                        // Thresholds for edge cases
                         const MIN_PERCENT_FOR_LEFT_LABEL = 25;
+                        const MAX_PERCENT_FOR_RIGHT_LABEL = 80;
 
-                        // Determine label positions
-                        // Strategy: Smaller value on LEFT, larger on RIGHT, unless value is too small
-                        // Special case: if BOTH are below threshold, still use left/right to avoid overlap
                         let aiLabelClass = styles.labelRight;
                         let humanLabelClass = styles.labelLeft;
 
                         const aiTooSmall = aiPercent < MIN_PERCENT_FOR_LEFT_LABEL;
                         const humanTooSmall = humanPercent < MIN_PERCENT_FOR_LEFT_LABEL;
 
+                        const aiTooLarge = aiPercent > MAX_PERCENT_FOR_RIGHT_LABEL;
+                        const humanTooLarge = humanPercent > MAX_PERCENT_FOR_RIGHT_LABEL;
+
+                        // Default Logic: Smaller on Left, Larger on Right
                         if (aiPercent < humanPercent) {
-                            // AI is smaller
                             if (aiTooSmall && !humanTooSmall) {
-                                // Only AI is too small - force it RIGHT, Human stays RIGHT
                                 aiLabelClass = styles.labelRight;
-                                humanLabelClass = styles.labelRight;
+                                humanLabelClass = humanTooLarge ? styles.labelLeft : styles.labelRight;
                             } else {
-                                // Normal case or both too small - use standard positioning
                                 aiLabelClass = styles.labelLeft;
                                 humanLabelClass = styles.labelRight;
                             }
                         } else if (aiPercent > humanPercent) {
-                            // Human is smaller
                             if (humanTooSmall && !aiTooSmall) {
-                                // Only Human is too small - force it RIGHT, AI stays RIGHT
-                                aiLabelClass = styles.labelRight;
                                 humanLabelClass = styles.labelRight;
+                                aiLabelClass = aiTooLarge ? styles.labelLeft : styles.labelRight;
                             } else {
-                                // Normal case or both too small - use standard positioning
                                 aiLabelClass = styles.labelRight;
                                 humanLabelClass = styles.labelLeft;
                             }
                         } else {
-                            // Equal values - default to AI left, Human right (unless both too small)
                             if (aiTooSmall) {
-                                // Both are equal and too small - both go RIGHT
                                 aiLabelClass = styles.labelRight;
                                 humanLabelClass = styles.labelRight;
                             } else {
@@ -145,6 +200,10 @@ const Chart: React.FC<ChartProps> = ({ data, onDeleteTask }) => {
                                 humanLabelClass = styles.labelRight;
                             }
                         }
+
+                        // OVERRIDE: If any point is too close to the right edge, FORCE it Left
+                        if (aiTooLarge) aiLabelClass = styles.labelLeft;
+                        if (humanTooLarge) humanLabelClass = styles.labelLeft;
 
                         return (
                             <div key={index} className={styles.row}>
@@ -178,7 +237,7 @@ const Chart: React.FC<ChartProps> = ({ data, onDeleteTask }) => {
                                         style={{ left: `${aiPercent}%` }}
                                     >
                                         <span
-                                            className={`${styles.timeLabelAi} ${aiLabelClass} ${(isOverlapping || aiNearLine) ? styles.labelOffsetUp : ''}`}
+                                            className={`${styles.timeLabelAi} ${aiLabelClass} ${(isOverlapping) ? styles.labelOffsetUp : ''}`}
                                         >
                                             {item.aiTime} min
                                         </span>
@@ -190,7 +249,7 @@ const Chart: React.FC<ChartProps> = ({ data, onDeleteTask }) => {
                                         style={{ left: `${humanPercent}%` }}
                                     >
                                         <span
-                                            className={`${styles.timeLabelHuman} ${humanLabelClass} ${(isOverlapping || humanNearLine) ? styles.labelOffsetDown : ''}`}
+                                            className={`${styles.timeLabelHuman} ${humanLabelClass} ${(isOverlapping) ? styles.labelOffsetDown : ''}`}
                                         >
                                             {item.humanTime} min
                                         </span>

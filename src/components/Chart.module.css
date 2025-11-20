@@ -1,6 +1,5 @@
 .chartContainer {
     width: 100%;
-    max-width: 1000px;
     margin: 0 auto;
     color: var(--color-text-secondary);
     font-family: var(--font-sans);
@@ -227,6 +226,9 @@
     font-weight: var(--font-bold);
     font-size: var(--text-sm);
     white-space: nowrap;
+    background-color: var(--color-surface);
+    padding: 0 4px;
+    border-radius: 4px;
 }
 
 .timeLabelHuman {
@@ -234,6 +236,9 @@
     font-size: var(--text-sm);
     font-weight: var(--font-medium);
     white-space: nowrap;
+    background-color: var(--color-surface);
+    padding: 0 4px;
+    border-radius: 4px;
 }
 
 .labelLeft {

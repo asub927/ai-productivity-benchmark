@@ -68,19 +68,57 @@
 }
 
 .topBar {
-    height: 64px;
-    background-color: var(--color-surface);
+    height: 80px;
+    /* Increased height for title */
+    background-color: var(--color-bg-secondary);
     border-bottom: 1px solid var(--color-border);
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 0 var(--space-xl);
-    box-shadow: var(--shadow-sm);
 }
 
-.breadcrumbs {
+.titleContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /* Center title and subtitle */
+}
+
+.title {
+    font-family: var(--font-serif);
+    font-size: var(--text-2xl);
+    font-weight: var(--font-bold);
+    color: var(--color-text-primary);
+    line-height: 1.2;
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-xs);
+}
+
+.human {
+    color: var(--color-text-primary);
+}
+
+.vs {
+    font-family: var(--font-serif);
+    font-style: italic;
+    color: var(--color-text-secondary);
+    font-size: var(--text-lg);
+    margin: 0 var(--space-xs);
+}
+
+.ai {
+    color: var(--color-secondary);
+}
+
+.subtitle {
+    font-family: var(--font-sans);
     font-size: var(--text-sm);
-    color: var(--color-text-muted);
+    color: var(--color-text-secondary);
+    font-weight: var(--font-normal);
+    margin-top: 2px;
 }
 
 .userProfile {

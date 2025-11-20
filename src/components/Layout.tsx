@@ -27,8 +27,13 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
             <main className={styles.main}>
                 <header className={styles.topBar}>
-                    <div className={styles.breadcrumbs}>
-                        Dashboard / Overview
+                    <div className={styles.titleContainer}>
+                        <h1 className={styles.title}>
+                            <span className={styles.human}>Human</span>
+                            <span className={styles.vs}>vs</span>
+                            <span className={styles.ai}>Human + AI</span>
+                        </h1>
+                        <h2 className={styles.subtitle}>Productivity Benchmark</h2>
                     </div>
                     <div className={styles.userProfile}>
                         <span>Demo User</span>
