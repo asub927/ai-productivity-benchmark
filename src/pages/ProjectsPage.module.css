@@ -11,6 +11,29 @@
     margin-bottom: 2rem;
 }
 
+.headerActions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.backButton {
+    padding: 0.75rem 1.5rem;
+    background: transparent;
+    color: var(--color-text-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.backButton:hover {
+    background: var(--color-surface);
+    color: var(--color-text-main);
+    border-color: var(--color-text-secondary);
+}
+
 .title {
     font-size: 2rem;
     font-weight: 700;
@@ -156,7 +179,7 @@
     border: 1px solid var(--color-border);
     background: var(--color-surface);
     color: var(--color-text-main);
-    font-size: 0.875rem;
+    font-size: 1rem;
     cursor: pointer;
     transition: all 0.2s;
 }
@@ -171,7 +194,7 @@
     border: none;
     background: var(--color-primary);
     color: white;
-    font-size: 0.875rem;
+    font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s;
@@ -275,7 +298,7 @@
     border-radius: 6px;
     font-weight: 600;
     cursor: pointer;
-    font-size: 0.9rem;
+    font-size: 1rem;
 }
 
 .addTaskButton:disabled {

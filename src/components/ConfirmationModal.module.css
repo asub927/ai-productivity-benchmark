@@ -13,19 +13,19 @@
 }
 
 .modal {
-    background: #0a0a12;
-    border: 1px solid #00FFFF;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
     border-radius: 8px;
     padding: 2rem;
     width: 90%;
     max-width: 400px;
-    box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+    box-shadow: var(--shadow-lg);
     text-align: center;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-sans);
 }
 
 .message {
-    color: #fff;
+    color: var(--color-text-main);
     font-size: 1.1rem;
     margin-bottom: 2rem;
 }
@@ -42,32 +42,35 @@
     font-weight: 700;
     cursor: pointer;
     transition: all 0.2s;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-sans);
+    font-size: 1rem;
 }
 
 .cancelButton {
     background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    color: #fff;
+    border: 1px solid var(--color-border);
+    color: var(--color-text-secondary);
     padding: 0.8rem 1.5rem;
     border-radius: 4px;
     cursor: pointer;
+    font-size: 1rem;
 }
 
 .cancelButton:hover {
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--color-bg-app);
 }
 
 .confirmButton {
-    background: #ff4444;
+    background: var(--color-danger);
     border: none;
-    color: #fff;
+    color: white;
     padding: 0.8rem 1.5rem;
     border-radius: 4px;
     cursor: pointer;
+    font-size: 1rem;
 }
 
 .confirmButton:hover {
-    background: #ff6666;
+    opacity: 0.9;
     transform: translateY(-2px);
 }
