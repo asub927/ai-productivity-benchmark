@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { TaskData } from '../types';
 
 interface ProductivityChartProps {
@@ -6,6 +6,7 @@ interface ProductivityChartProps {
 }
 
 const ProductivityChart: React.FC<ProductivityChartProps> = ({ data }) => {
+    const [hoveredPoint, setHoveredPoint] = useState<string | null>(null);
     // 1. Group data by project
     const projectData = useMemo(() => {
         const groups: { [key: string]: { task: string, gain: number }[] } = {};
@@ -204,8 +205,16 @@ const ProductivityChart: React.FC<ProductivityChartProps> = ({ data }) => {
                     {projects.map((project, i) => (
                         projectData[project].map((d, idx) => {
                             const isMedian = idx === Math.floor((maxTasks - 1) / 2);
+                            const pointKey = `${i}-${idx}`;
+                            const isHovered = hoveredPoint === pointKey;
+
                             return (
-                                <g key={`${i}-${idx}`}>
+                                <g
+                                    key={pointKey}
+                                    onMouseEnter={() => setHoveredPoint(pointKey)}
+                                    onMouseLeave={() => setHoveredPoint(null)}
+                                    style={{ cursor: 'pointer' }}
+                                >
                                     <circle
                                         cx={getX(idx)}
                                         cy={getY(d.gain)}
@@ -214,7 +223,7 @@ const ProductivityChart: React.FC<ProductivityChartProps> = ({ data }) => {
                                         stroke={colors[i % colors.length]}
                                         strokeWidth={isMedian ? 3 : 2}
                                     />
-                                    {isMedian && (
+                                    {isMedian ? (
                                         <g transform={`translate(${getX(idx)}, ${getY(d.gain)})`}>
                                             <rect
                                                 x="10"
@@ -235,6 +244,17 @@ const ProductivityChart: React.FC<ProductivityChartProps> = ({ data }) => {
                                                 {d.gain.toFixed(1)}x
                                             </text>
                                         </g>
+                                    ) : isHovered && (
+                                        <text
+                                            x={getX(idx)}
+                                            y={getY(d.gain) - 12}
+                                            textAnchor="middle"
+                                            fill={colors[i % colors.length]}
+                                            fontSize="11"
+                                            fontWeight="600"
+                                        >
+                                            {d.gain.toFixed(1)}x
+                                        </text>
                                     )}
                                 </g>
                             );
