@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { InputFormProps, TaskData } from '../types';
 import { useProjects } from '../context/ProjectContext';
 import styles from './InputForm.module.css';
@@ -14,10 +14,10 @@ const InputForm: React.FC<InputFormProps> = ({ onAddTask, onClear }) => {
 
     const selectedProject = projects.find(p => p.id === selectedProjectId);
 
-    // Reset task when project changes
-    useEffect(() => {
-        setTask('');
-    }, [selectedProjectId]);
+    const handleProjectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setSelectedProjectId(e.target.value);
+        setTask(''); // Clear task when project changes manually
+    };
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
         e.preventDefault();
@@ -55,7 +55,7 @@ const InputForm: React.FC<InputFormProps> = ({ onAddTask, onClear }) => {
                     {projects.length > 0 ? (
                         <select
                             value={selectedProjectId}
-                            onChange={(e) => setSelectedProjectId(e.target.value)}
+                            onChange={handleProjectChange}
                             className={styles.select}
                             required
                         >

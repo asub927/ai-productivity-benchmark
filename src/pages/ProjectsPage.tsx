@@ -1,19 +1,23 @@
 import React, { useState } from 'react';
 import { useProjects } from '../context/ProjectContext';
+import { useNavigate } from 'react-router-dom';
 import styles from './ProjectsPage.module.css';
 
 const ProjectsPage: React.FC = () => {
     const { projects, addProject, deleteProject, addTaskToProject, deleteTaskFromProject } = useProjects();
+    const navigate = useNavigate();
     const [isCreating, setIsCreating] = useState(false);
     const [newProjectName, setNewProjectName] = useState('');
+    const [initialTask, setInitialTask] = useState('');
     const [expandedProjectId, setExpandedProjectId] = useState<string | null>(null);
     const [newTaskNames, setNewTaskNames] = useState<{ [key: string]: string }>({});
 
     const handleAddProject = (e: React.FormEvent) => {
         e.preventDefault();
-        if (newProjectName.trim()) {
-            addProject(newProjectName.trim());
+        if (newProjectName.trim() && initialTask.trim()) {
+            addProject(newProjectName.trim(), initialTask.trim());
             setNewProjectName('');
+            setInitialTask('');
             setIsCreating(false);
         }
     };
@@ -42,12 +46,20 @@ const ProjectsPage: React.FC = () => {
                     <h2 className={styles.title}>Projects & Tasks</h2>
                     <p className={styles.description}>Manage your projects and their associated tasks.</p>
                 </div>
-                <button
-                    className={styles.createButton}
-                    onClick={() => setIsCreating(!isCreating)}
-                >
-                    {isCreating ? 'Cancel' : 'Create New Project'}
-                </button>
+                <div className={styles.headerActions}>
+                    <button
+                        className={styles.backButton}
+                        onClick={() => navigate('/')}
+                    >
+                        Back to Dashboard
+                    </button>
+                    <button
+                        className={styles.createButton}
+                        onClick={() => setIsCreating(!isCreating)}
+                    >
+                        {isCreating ? 'Cancel' : 'Create New Project'}
+                    </button>
+                </div>
             </div>
 
             {isCreating && (
@@ -61,7 +73,14 @@ const ProjectsPage: React.FC = () => {
                             className={styles.input}
                             autoFocus
                         />
-                        <button type="submit" className={styles.saveButton} disabled={!newProjectName.trim()}>
+                        <input
+                            type="text"
+                            placeholder="Initial Task (Required)"
+                            value={initialTask}
+                            onChange={(e) => setInitialTask(e.target.value)}
+                            className={styles.input}
+                        />
+                        <button type="submit" className={styles.saveButton} disabled={!newProjectName.trim() || !initialTask.trim()}>
                             Save Project
                         </button>
                     </form>

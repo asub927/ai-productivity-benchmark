@@ -1,12 +1,16 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { Project } from '../types';
+import { Project, TaskData } from '../types';
 
 interface ProjectContextType {
     projects: Project[];
-    addProject: (name: string) => void;
+    chartData: TaskData[];
+    addProject: (name: string, initialTask: string) => void;
     deleteProject: (id: string) => void;
     addTaskToProject: (projectId: string, taskName: string) => void;
     deleteTaskFromProject: (projectId: string, taskName: string) => void;
+    addChartData: (data: TaskData) => void;
+    deleteChartData: (index: number) => void;
+    clearChartData: () => void;
 }
 
 const ProjectContext = createContext<ProjectContextType | undefined>(undefined);
@@ -29,15 +33,24 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({ children }) =>
         return savedProjects ? JSON.parse(savedProjects) : [];
     });
 
+    const [chartData, setChartData] = useState<TaskData[]>(() => {
+        const savedData = localStorage.getItem('chartData');
+        return savedData ? JSON.parse(savedData) : [];
+    });
+
     useEffect(() => {
         localStorage.setItem('projects', JSON.stringify(projects));
     }, [projects]);
 
-    const addProject = (name: string) => {
+    useEffect(() => {
+        localStorage.setItem('chartData', JSON.stringify(chartData));
+    }, [chartData]);
+
+    const addProject = (name: string, initialTask: string) => {
         const newProject: Project = {
             id: crypto.randomUUID(),
             name,
-            tasks: []
+            tasks: [initialTask]
         };
         setProjects([...projects, newProject]);
     };
@@ -66,8 +79,30 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({ children }) =>
         }));
     };
 
+    const addChartData = (data: TaskData) => {
+        setChartData([...chartData, data]);
+    };
+
+    const deleteChartData = (index: number) => {
+        setChartData(chartData.filter((_, i) => i !== index));
+    };
+
+    const clearChartData = () => {
+        setChartData([]);
+    };
+
     return (
-        <ProjectContext.Provider value={{ projects, addProject, deleteProject, addTaskToProject, deleteTaskFromProject }}>
+        <ProjectContext.Provider value={{
+            projects,
+            chartData,
+            addProject,
+            deleteProject,
+            addTaskToProject,
+            deleteTaskFromProject,
+            addChartData,
+            deleteChartData,
+            clearChartData
+        }}>
             {children}
         </ProjectContext.Provider>
     );

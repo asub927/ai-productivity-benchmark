@@ -102,6 +102,7 @@
     background: var(--color-primary);
     color: white;
     min-width: 120px;
+    font-size: 1rem;
 }
 
 .button:hover:not(:disabled) {
