@@ -180,7 +180,7 @@ The following diagram illustrates the complete system architecture, showing all 
 
 ## Proposed Changes
 
-### Phase 1: NestJS Backend Setup & 3-Layer Architecture
+### Phase 1: NestJS Backend Setup & 3-Layer Architecture (COMPLETED)
 
 #### [NEW] [backend/](file:///Users/aaranvi/dev/ai/antigravity-demo/ai-productivity-benchmark/backend/)
 
@@ -1481,7 +1481,7 @@ NODE_ENV=development
 
 ---
 
-### Phase 2: Database Design & Setup
+### Phase 2: Database Design & Setup (COMPLETED)
 
 #### [NEW] [schema.prisma](file:///Users/aaranvi/dev/ai/antigravity-demo/human-vs-ai-app/backend/prisma/schema.prisma)
 
@@ -1574,7 +1574,7 @@ Seed script for development data:
 
 ---
 
-### Phase 3: Frontend Component Migration
+### Phase 3: Frontend Component Migration (COMPLETED)
 
 The frontend components remain in the existing Vite structure. The main work is updating API calls to use the new NestJS backend.
 
@@ -1724,88 +1724,51 @@ export interface TaskData {
 
 ---
 
-### Phase 4: Enhanced AI Features
+### Phase 4: Enhanced AI Features (Python ADK + MCP)
 
-This phase focuses on implementing advanced AI capabilities in the Process API layer.
+This phase introduces a microservices architecture to leverage the Python Google ADK while maintaining the NestJS backend.
 
-#### [NEW] [lib/process/ai/insights.service.ts](file:///Users/aaranvi/dev/ai/antigravity-demo/human-vs-ai-app/lib/process/ai/insights.service.ts)
+#### [MODIFY] [backend/](file:///Users/aaranvi/dev/ai/antigravity-demo/ai-productivity-benchmark/backend/)
 
-AI-powered productivity insights:
-- Analyze user's task completion patterns
-- Identify which types of tasks benefit most from AI
-- Generate weekly/monthly productivity summaries
-- Detect productivity trends over time
-- Provide personalized recommendations
+**NestJS Backend (MCP Server)**:
+- Acts as the "Model Context Protocol" (MCP) Server.
+- Exposes core business logic (Tasks, Projects, Analytics) as MCP Tools.
+- Provides an SSE (Server-Sent Events) endpoint for the Python service to connect to.
 
-**Key Features:**
-1. **Pattern Detection**: Identify tasks where AI provides 5x+ productivity gains
-2. **Time Savings Analysis**: Calculate total time saved using AI
-3. **Project Recommendations**: Suggest which projects to prioritize for AI adoption
-4. **Anomaly Detection**: Flag unusually high or low productivity gains
+**Changes:**
+- `src/mcp/`: Implement MCP Server with SSE transport.
+- `src/process/services/`: Register `createTask`, `getAnalytics`, etc., as MCP tools.
 
-#### [NEW] [lib/process/ai/estimation.service.ts](file:///Users/aaranvi/dev/ai/antigravity-demo/human-vs-ai-app/lib/process/ai/estimation.service.ts)
+#### [NEW] [python-agent-service/](file:///Users/aaranvi/dev/ai/antigravity-demo/ai-productivity-benchmark/python-agent-service/)
 
-AI-powered task time estimation:
-- Given a task description, estimate completion times
-- Learn from user's historical data for personalized estimates
-- Provide confidence scores for estimates
-- Categorize tasks automatically (coding, design, documentation, etc.)
+**Python Agent Service (MCP Client)**:
+- Hosts the AI Agents using `google-adk`.
+- Connects to the NestJS backend via MCP (SSE).
+- **Agents**:
+    - `ChatAgent`: Conversational interface.
+    - `EstimationAgent`: Estimates task times.
+    - `InsightsAgent`: Analyzes productivity.
 
-**Implementation:**
-```typescript
-export async function estimateTaskTime(
-  userId: string,
-  taskDescription: string
-): Promise<{
-  humanTime: number;
-  aiTime: number;
-  confidence: number;
-  category: string;
-}> {
-  // Get user's historical data
-  const historicalTasks = await tasksRepository.findAllByUserId(userId);
-  
-  // Build context-aware prompt
-  const prompt = buildEstimationPrompt(taskDescription, historicalTasks);
-  
-  // Call Gemini API
-  const response = await geminiService.generateEstimate(prompt);
-  
-  // Parse and return structured data
-  return parseEstimationResponse(response);
-}
-```
+**Structure:**
+- `main.py`: Entry point, connects to MCP server.
+- `agents/`: Agent implementations using ADK.
+- `requirements.txt`: Dependencies (`google-adk`, `mcp`).
 
-#### [NEW] [lib/process/ai/query.service.ts](file:///Users/aaranvi/dev/ai/antigravity-demo/human-vs-ai-app/lib/process/ai/query.service.ts)
+#### [MODIFY] [backend/src/process/agents/](file:///Users/aaranvi/dev/ai/antigravity-demo/ai-productivity-benchmark/backend/src/process/agents/)
 
-Natural language query interface:
-- Users can ask questions about their data
-- Examples:
-  - "Which project saves me the most time?"
-  - "How much time have I saved this month?"
-  - "What tasks should I use AI for?"
-- AI queries user's data and provides answers
-- Generates visualizations when appropriate
+**Cleanup**:
+- Remove the temporary TypeScript agents (`ChatAgent`, `EstimationAgent`, etc.) as they are moving to Python.
+- The `Orchestrator` might remain in NestJS to route HTTP requests to the Python service, OR the Python service can expose endpoints.
+    - *Decision*: Python service exposes a simple HTTP API for the frontend/NestJS to trigger agents.
 
-#### [MODIFY] [app/api/experience/ai/insights/route.ts](file:///Users/aaranvi/dev/ai/antigravity-demo/human-vs-ai-app/app/api/experience/ai/insights/route.ts)
-
-New endpoint for AI insights:
-- `GET /api/experience/ai/insights` - Get productivity insights
-- Calls Process API insights service
-- Returns formatted insights for UI display
-
-#### [NEW] [components/AIInsights.tsx](file:///Users/aaranvi/dev/ai/antigravity-demo/human-vs-ai-app/components/AIInsights.tsx) (Optional)
-
-Insights panel component:
-- Display AI-generated insights on Dashboard or Reports page
-- Show productivity trends
-- Highlight top-performing projects
-- Display recommendations
-- Match existing design aesthetic
-- Can be added as a collapsible panel
-
----
-
+**Integration Flow**:
+1. Frontend calls NestJS API (`/api/ai/chat`).
+2. NestJS forwards request to Python Service.
+3. Python Agent processes request.
+4. Python Agent calls NestJS MCP Tools (e.g., `get_user_tasks`) via MCP connection.
+5. NestJS executes tool and returns result to Python.
+6. Python Agent generates response and returns to NestJS.
+7. NestJS returns response to Frontend.
 
 ---
 

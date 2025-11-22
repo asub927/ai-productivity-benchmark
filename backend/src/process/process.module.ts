@@ -4,9 +4,10 @@ import { ProjectsService } from './services/projects.service';
 import { TasksService } from './services/tasks.service';
 import { AnalyticsService } from './services/analytics.service';
 import { AiOrchestratorService } from './services/ai-orchestrator.service';
+import { McpModule } from '../mcp/mcp.module';
 
 @Module({
-    imports: [DataModule],
+    imports: [DataModule, McpModule],
     providers: [
         ProjectsService,
         TasksService,

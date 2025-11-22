@@ -5,6 +5,7 @@ import { ExperienceModule } from './experience/experience.module';
 import { ProcessModule } from './process/process.module';
 import { DataModule } from './data/data.module';
 import { AuthModule } from './auth/auth.module';
+import { McpModule } from './mcp/mcp.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { AuthModule } from './auth/auth.module';
     ProcessModule,
     DataModule,
     AuthModule,
+    McpModule,
   ],
 })
 export class AppModule { }

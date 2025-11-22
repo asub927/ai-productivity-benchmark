@@ -1,9 +1,36 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ProjectsRepository } from '../../data/repositories/projects.repository';
+import { McpService } from '../../mcp/mcp.service';
+import { z } from 'zod';
 
 @Injectable()
-export class ProjectsService {
-    constructor(private projectsRepository: ProjectsRepository) { }
+export class ProjectsService implements OnModuleInit {
+    constructor(
+        private projectsRepository: ProjectsRepository,
+        private mcpService: McpService
+    ) { }
+
+    onModuleInit() {
+        this.mcpService.registerTool(
+            'get_user_projects',
+            'Get all projects for a user',
+            {
+                userId: z.string().describe('The ID of the user to fetch projects for'),
+            },
+            async ({ userId }) => this.getAllProjects(userId)
+        );
+
+        this.mcpService.registerTool(
+            'create_project',
+            'Create a new project',
+            {
+                userId: z.string().describe('The ID of the user creating the project'),
+                name: z.string().describe('The name of the project'),
+                initialTask: z.string().optional().describe('Optional initial task name'),
+            },
+            async ({ userId, name, initialTask }) => this.createProject(userId, { name, taskNames: initialTask ? [initialTask] : [] })
+        );
+    }
 
     async getAllProjects(userId: string) {
         return this.projectsRepository.findAllByUserId(userId);

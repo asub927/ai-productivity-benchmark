@@ -2,6 +2,8 @@ import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
 import helmet from 'helmet';
+import { ConfigService } from '@nestjs/config';
+import { McpService } from './mcp/mcp.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -10,6 +12,16 @@ async function bootstrap() {
   app.use(helmet());
 
   // CORS configuration for frontend
+  // Enable CORS
+  app.enableCors();
+
+  // Attach MCP SSE endpoint
+  const mcpService = app.get(McpService);
+  // Get underlying Express app
+  const expressApp = app.getHttpAdapter().getInstance();
+  await mcpService.attachToExpress(expressApp, '/api/mcp/sse');
+
+  const configService = app.get(ConfigService);
   app.enableCors({
     origin: process.env.FRONTEND_URL || ['http://localhost:5173', 'http://localhost:3000'],
     credentials: true,
