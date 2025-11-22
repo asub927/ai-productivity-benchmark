@@ -3,14 +3,15 @@
 ## Overview
 
 Transform the current client-side React application into a comprehensive full-stack application with:
-- **Framework**: Next.js 14+ (App Router) with TypeScript - unified frontend and backend
+- **Frontend**: React with Vite (existing) - no changes to UI
+- **Backend Framework**: NestJS with TypeScript - enterprise-grade Node.js framework
 - **Architecture**: Cloud-Native 3-Layer API Design
-  - **UI & Experience API Layer**: Next.js pages + API routes for client-facing operations
+  - **UI & Experience API Layer**: REST API endpoints for client-facing operations
   - **Process API Layer**: Business logic, Google ADK agents, and workflow orchestration
   - **Data API Layer**: Database operations with Prisma ORM
 - **Database**: PostgreSQL (provider-agnostic: Cloud SQL, AWS RDS, Azure Database)
-- **AI Framework**: Google ADK (Agent Development Kit) with LangGraph for multi-agent workflows
-- **Authentication**: NextAuth.js v5 with OAuth (Google, GitHub, Apple, Microsoft)
+- **AI Framework**: Google ADK with A2A protocol for agent communication
+- **Authentication**: Passport.js with OAuth 2.0 (Google, GitHub, Apple, Microsoft)
 - **Security & Accessibility**: WCAG 2.1 AA compliance, OWASP Top 10 protection
 - **Deployment**: Provider-agnostic containerized deployment (GCP, AWS, Azure, on-premises)
 
@@ -24,16 +25,17 @@ The existing design and UI will remain **exactly the same**. All changes are arc
 
 ### 3-Layer Architecture Benefits
 
-1. **UI & Experience API**: Next.js pages and API routes handle user interactions and client requests
+1. **UI & Experience API**: NestJS REST controllers handle HTTP requests and client interactions
 2. **Process API**: Google ADK agents implement business logic and AI workflows
 3. **Data API**: Prisma repositories provide type-safe database access
 
 This separation provides:
-- **Unified Codebase**: Single Next.js project (no separate backend server)
+- **Separation of Concerns**: React frontend + NestJS backend (microservices-ready architecture)
 - **Better Scalability**: Each layer can scale independently via container orchestration
 - **Improved Maintainability**: Clear separation of concerns with defined boundaries
 - **Enhanced Security**: Data layer isolated from direct client access
 - **Easier Testing**: Each layer can be tested independently
+- **Enterprise-Grade**: NestJS provides built-in dependency injection, middleware, guards, and interceptors
 
 ---
 
@@ -41,30 +43,32 @@ This separation provides:
 
 The following diagram illustrates the complete system architecture, showing all layers, components, and their interactions:
 
-![AI Productivity Benchmark Architecture](./architecture-diagram.jpeg)
+![AI Productivity Benchmark Architecture](./architecture.jpeg)
 
 ### Architecture Components
 
 **Client Layer**
-- Next.js-powered React application
+- React application (Vite) - existing UI unchanged
 - Responsive UI (Dashboard, Reports, Projects pages)
 - OAuth authentication with 4 providers (Google, GitHub, Apple, Microsoft)
 
 **UI & Experience API Layer**
-- Next.js API routes handling client requests
-- Endpoints: `/api/experience/auth`, `/api/experience/projects`, `/api/experience/tasks`, `/api/experience/analytics`, `/api/experience/ai`
-- Request validation and response formatting
-- NextAuth.js integration for authentication
+- NestJS REST controllers handling client requests
+- Endpoints: `/api/auth`, `/api/projects`, `/api/tasks`, `/api/analytics`, `/api/ai`
+- Request validation with class-validator and DTOs
+- Response formatting with interceptors
+- Passport.js integration for OAuth authentication
 
 **Process API Layer**
 - Google ADK Orchestrator coordinating specialized agents
+- **A2A Protocol**: Simple message passing between agents
 - **5 Specialized Agents**:
   - **Chat Agent**: Conversational AI for user interactions
   - **Estimation Agent**: AI-powered task time predictions
   - **Insights Agent**: Productivity analytics and recommendations
   - **Data Agent**: Database query coordination
   - **Tool Agent**: Action execution (create tasks, projects)
-- LangGraph workflows for complex agent coordination
+- Simple orchestrator for routing and agent communication
 
 **Data API Layer**
 - Prisma ORM for type-safe database access
@@ -100,25 +104,34 @@ The following diagram illustrates the complete system architecture, showing all 
 > **Technology Stack Decisions**
 > 
 > This plan uses the following technology choices:
-> - **Framework**: Next.js 14+ with App Router and TypeScript
+> - **Frontend**: React with Vite and TypeScript (existing, no changes)
+> - **Backend Framework**: NestJS with TypeScript (enterprise Node.js framework)
 > - **Architecture**: Cloud-Native 3-Layer API Design (UI & Experience + Process + Data)
 > - **Database**: PostgreSQL with provider-agnostic abstraction (Cloud SQL, AWS RDS, Azure Database, or self-hosted)
-> - **Authentication**: NextAuth.js v5 with OAuth providers (Apple, Microsoft, Google, GitHub)
+> - **Authentication**: Passport.js with OAuth 2.0 providers (Apple, Microsoft, Google, GitHub)
 > - **ORM**: Prisma (open-source, type-safe, database-agnostic)
-> - **AI Framework**: **Google ADK (Agent Development Kit)** for agentic patterns
-> - **AI Agents**: Built using Google ADK's agent framework with LangGraph integration
-> - **Containerization**: Docker with multi-stage builds
+> - **AI Framework**: **Google ADK (Agent Development Kit)** with A2A protocol
+> - **AI Agents**: Built using Google ADK's agent framework with simple message passing
+> - **Containerization**: Docker with multi-stage builds (separate containers for frontend and backend)
 > - **Cloud Deployment**: Provider-agnostic (supports GCP, AWS, Azure via environment configuration)
 > - **Accessibility**: WCAG 2.1 Level AA compliance
-> - **Security**: OWASP Top 10 protection, CSP headers, rate limiting
+> - **Security**: OWASP Top 10 protection, CORS, helmet.js, rate limiting
+> 
+> **NestJS Benefits:**
+> - Enterprise-grade Node.js framework with TypeScript-first approach
+> - Built-in dependency injection and modular architecture
+> - Extensive middleware, guards, interceptors, and pipes ecosystem
+> - Native support for microservices and GraphQL (future extensibility)
+> - Excellent documentation and community support
+> - Production-ready with built-in testing utilities
 > 
 > **Google ADK Benefits:**
 > - Official Google framework for building AI agents
 > - Built-in support for Gemini models
-> - LangGraph integration for complex agent workflows
 > - Tool calling and function execution
-> - State management for multi-turn conversations
+> - Simple agent coordination with A2A protocol
 > - Production-ready with monitoring and observability
+> - No complex workflow frameworks needed
 > 
 > **Cloud-Native Principles:**
 > - **12-Factor App**: Environment-based configuration, stateless processes, port binding
@@ -129,205 +142,312 @@ The following diagram illustrates the complete system architecture, showing all 
 > - **Provider Agnostic**: No vendor lock-in, works on GCP, AWS, Azure, or on-premises
 > 
 > **Single-User Architecture:**
-> - Each user has isolated data (no shared resources)
-> - No collaboration features in initial version
-> - Simplified data model without team/workspace concepts
-> - Can be extended to multi-user/team features later
-
-> [!WARNING]
-> **Breaking Changes**
-> 
-> - **Data Migration Required**: Existing localStorage data will need to be migrated to the database
-> - **Authentication Required**: Users will need to create accounts to access the application
-> - **API Keys**: Gemini API key will move from client to server (requires backend environment variable)
-> - **Deployment Changes**: Will require deploying both frontend (Cloud Run) and backend (Cloud Run) + database (Cloud SQL)
+> - Single-user application (one user per deployment instance)
+> - No multi-tenancy or user isolation needed
+> - Simplified data model without user authentication complexity
+> - OAuth used only for user identity verification
+> - Can be extended to multi-user features in future versions
 
 > [!IMPORTANT]
-> **Multi-User Considerations**
+> **Deployment Architecture**
 > 
-> With database persistence and authentication, each user will have their own isolated data. The current shared localStorage will become per-user data. This means:
-> - Each user sees only their own projects and tasks
-> - No data sharing between users (unless we add collaboration features later)
-> - User registration/login flow will be added
-> 
-> **Question**: Do you want to add any collaboration features (e.g., shared projects, team workspaces) in this phase, or keep it single-user focused?
+> - **No Data Migration**: Fresh start with database persistence (existing localStorage data not migrated)
+> - **Single-User Mode**: One user per application instance, OAuth for identity only
+> - **API Keys**: Gemini API key moves from client to backend (server environment variable)
+> - **Deployment**: Separate containers for frontend (React/Vite) and backend (NestJS) + database (PostgreSQL)
+> - **CORS Configuration**: Frontend and backend communicate via REST API with proper CORS setup
 
 ---
 
 ## Proposed Changes
 
-### Phase 1: Next.js Migration & 3-Layer Architecture Setup
+### Phase 1: NestJS Backend Setup & 3-Layer Architecture
 
-#### [MODIFY] [package.json](file:///Users/aaranvi/dev/ai/antigravity-demo/human-vs-ai-app/package.json)
+#### [NEW] [backend/](file:///Users/aaranvi/dev/ai/antigravity-demo/ai-productivity-benchmark/backend/)
 
-Migrate from Vite to Next.js:
-- Remove Vite dependencies
-- Add Next.js 14+ with App Router
-- Add NextAuth.js v5 for authentication
-- Add Prisma and PostgreSQL client
-- Add validation libraries (Zod)
-- Update scripts:
+Create new NestJS backend application:
+- Initialize NestJS project with `@nestjs/cli`
+- Set up TypeScript configuration
+- Configure project structure for 3-layer architecture
+
+#### [NEW] [backend/package.json](file:///Users/aaranvi/dev/ai/antigravity-demo/ai-productivity-benchmark/backend/package.json)
+
+NestJS backend dependencies:
+- `@nestjs/core`, `@nestjs/common`, `@nestjs/platform-express` - Core framework
+- `@nestjs/passport`, `passport`, `passport-google-oauth20`, `passport-github2`, `passport-apple`, `passport-azure-ad` - OAuth authentication
+- `@nestjs/jwt` - JWT token management
+- `@prisma/client`, `prisma` - Database ORM
+- `class-validator`, `class-transformer` - DTO validation
+- `@google/generative-ai` - Google ADK for AI agents
+- `helmet`, `cors` - Security middleware
+- `@nestjs/throttler` - Rate limiting
+- Scripts:
   ```json
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
+    "start:dev": "nest start --watch",
+    "start:prod": "node dist/main",
+    "build": "nest build",
+    "test": "jest",
     "db:migrate": "prisma migrate dev",
     "db:studio": "prisma studio"
   }
   ```
 
-#### [NEW] [next.config.js](file:///Users/aaranvi/dev/ai/antigravity-demo/human-vs-ai-app/next.config.js)
+#### [MODIFY] [package.json](file:///Users/aaranvi/dev/ai/antigravity-demo/ai-productivity-benchmark/package.json)
 
-Next.js configuration:
-- Enable App Router
-- Configure environment variables
-- Set up API routes
-- Configure image optimization
-- Set up rewrites for API layers
+Frontend stays with Vite (no changes):
+- Keep existing React + Vite setup
+- Add `axios` or `fetch` for API calls to backend
+- No migration needed - UI remains unchanged
+- Update API base URL to point to NestJS backend (e.g., `http://localhost:3001`)
 
-#### [NEW] [app/](file:///Users/aaranvi/dev/ai/antigravity-demo/human-vs-ai-app/app/)
+#### [NEW] [backend/src/](file:///Users/aaranvi/dev/ai/antigravity-demo/ai-productivity-benchmark/backend/src/)
 
-Migrate to Next.js App Router structure:
-- Move `src/pages/` to `app/` directory
-- Convert pages to Next.js app router format
-- Keep all existing components in `components/` directory
-- Maintain existing CSS modules
-
-**Directory structure:**
+NestJS backend directory structure (3-layer architecture):
 ```
-app/
-├── layout.tsx              # Root layout (replaces Layout component)
-├── page.tsx                # Dashboard page (/)
-├── reports/
-│   └── page.tsx            # Reports page
-├── projects/
-│   └── page.tsx            # Projects page
-├── login/
-│   └── page.tsx            # Login page
-├── register/
-│   └── page.tsx            # Register page
-└── api/                    # API routes (3-layer architecture)
-    ├── experience/         # UI & Experience API Layer
-    │   ├── auth/
-    │   ├── projects/
-    │   ├── tasks/
-    │   └── analytics/
-    ├── process/            # Process API Layer
-    │   ├── business-logic/
-    │   ├── ai-services/
-    │   └── orchestration/
-    └── data/               # Data API Layer
-        ├── projects/
-        ├── tasks/
-        └── users/
+backend/src/
+├── main.ts                          # Application entry point
+├── app.module.ts                    # Root module
+│
+├── experience/                      # UI & Experience API Layer
+│   ├── experience.module.ts
+│   ├── controllers/
+│   │   ├── auth.controller.ts       # POST /api/auth/login, /logout
+│   │   ├── projects.controller.ts   # CRUD /api/projects
+│   │   ├── tasks.controller.ts      # CRUD /api/tasks
+│   │   ├── analytics.controller.ts  # GET /api/analytics/*
+│   │   └── ai.controller.ts         # POST /api/ai/chat, /estimate
+│   ├── dto/                         # Data Transfer Objects
+│   │   ├── create-project.dto.ts
+│   │   ├── create-task.dto.ts
+│   │   └── chat-message.dto.ts
+│   └── guards/
+│       └── auth.guard.ts            # JWT authentication guard
+│
+├── process/                         # Process API Layer
+│   ├── process.module.ts
+│   ├── services/
+│   │   ├── projects.service.ts      # Business logic for projects
+│   │   ├── tasks.service.ts         # Business logic for tasks
+│   │   ├── analytics.service.ts     # Analytics calculations
+│   │   └── ai-orchestrator.service.ts
+│   └── agents/                      # Google ADK agents
+│       ├── chat-agent.ts
+│       ├── estimation-agent.ts
+│       ├── insights-agent.ts
+│       └── orchestrator.ts
+│
+├── data/                            # Data API Layer
+│   ├── data.module.ts
+│   ├── prisma.service.ts            # Prisma client singleton
+│   └── repositories/
+│       ├── users.repository.ts
+│       ├── projects.repository.ts
+│       ├── tasks.repository.ts
+│       └── chat-history.repository.ts
+│
+├── auth/                            # Authentication module
+│   ├── auth.module.ts
+│   ├── auth.service.ts
+│   ├── strategies/
+│   │   ├── google.strategy.ts
+│   │   ├── github.strategy.ts
+│   │   ├── apple.strategy.ts
+│   │   ├── microsoft.strategy.ts
+│   │   └── jwt.strategy.ts
+│   └── guards/
+│       └── oauth.guard.ts
+│
+└── common/                          # Shared utilities
+    ├── filters/
+    │   └── http-exception.filter.ts
+    ├── interceptors/
+    │   └── transform.interceptor.ts
+    └── middleware/
+        └── logger.middleware.ts
 ```
 
-#### [NEW] [app/api/experience/](file:///Users/aaranvi/dev/ai/antigravity-demo/human-vs-ai-app/app/api/experience/)
+#### [NEW] [backend/src/experience/controllers/](file:///Users/aaranvi/dev/ai/antigravity-demo/ai-productivity-benchmark/backend/src/experience/controllers/)
 
-**UI & Experience API Layer** - Client-facing endpoints:
+**UI & Experience API Layer** - NestJS Controllers:
 
-**Purpose**: Handle HTTP requests from the frontend, validate input, format responses for UI consumption
+**Purpose**: Handle HTTP requests from the frontend, validate input with DTOs, format responses for UI consumption
 
-**auth/[...nextauth]/route.ts** - NextAuth.js configuration:
-- Email/password authentication
-- JWT session strategy
-- Callbacks for user data
-- Calls Process API for user validation
-
-**projects/route.ts**:
-- `GET /api/experience/projects` - List user's projects
-- `POST /api/experience/projects` - Create new project
-- Validates request body with Zod
-- Calls Process API for business logic
-- Returns UI-friendly response format
-
-**projects/[id]/route.ts**:
-- `GET /api/experience/projects/:id` - Get single project
-- `PUT /api/experience/projects/:id` - Update project
-- `DELETE /api/experience/projects/:id` - Delete project
-
-**tasks/route.ts**:
-- `GET /api/experience/tasks` - List user's tasks
-- `POST /api/experience/tasks` - Create new task
-- Validates time values (positive numbers)
-- Calls Process API for task creation
-
-**tasks/[id]/route.ts**:
-- `GET /api/experience/tasks/:id` - Get single task
-- `PUT /api/experience/tasks/:id` - Update task
-- `DELETE /api/experience/tasks/:id` - Delete task
-
-**analytics/route.ts**:
-- `GET /api/experience/analytics/overview` - Overall statistics
-- `GET /api/experience/analytics/by-project` - Project breakdown
-- `GET /api/experience/analytics/chart-data` - Chart-ready data
-- Calls Process API for calculations
-
-**ai/chat/route.ts**:
-- `POST /api/experience/ai/chat` - Chat with AI
-- `GET /api/experience/ai/history` - Get chat history
-- Calls Process API for AI processing
-
-**ai/estimate/route.ts**:
-- `POST /api/experience/ai/estimate` - Estimate task times
-- Calls Process API for AI-powered estimation
-
-#### [NEW] [app/api/auth/[...nextauth]/route.ts](file:///Users/aaranvi/dev/ai/antigravity-demo/human-vs-ai-app/app/api/auth/[...nextauth]/route.ts)
-
-**OAuth Authentication Configuration** - Multi-provider support:
-
-NextAuth.js configuration with 4 OAuth providers:
-
+**auth.controller.ts** - OAuth authentication endpoints:
 ```typescript
-import NextAuth from "next-auth"
-import GoogleProvider from "next-auth/providers/google"
-import GitHubProvider from "next-auth/providers/github"
-import AppleProvider from "next-auth/providers/apple"
-import AzureADProvider from "next-auth/providers/azure-ad"
-
-export const authOptions = {
-  providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-    }),
-    GitHubProvider({
-      clientId: process.env.GITHUB_CLIENT_ID!,
-      clientSecret: process.env.GITHUB_CLIENT_SECRET!,
-    }),
-    AppleProvider({
-      clientId: process.env.APPLE_CLIENT_ID!,
-      clientSecret: process.env.APPLE_CLIENT_SECRET!,
-    }),
-    AzureADProvider({
-      clientId: process.env.MICROSOFT_CLIENT_ID!,
-      clientSecret: process.env.MICROSOFT_CLIENT_SECRET!,
-      tenantId: process.env.MICROSOFT_TENANT_ID!,
-    }),
-  ],
-  callbacks: {
-    async signIn({ user, account, profile }) {
-      // Create user in database if first time
-      await usersRepository.findOrCreate({
-        email: user.email,
-        name: user.name,
-        provider: account.provider,
-        providerId: account.providerAccountId,
-      });
-      return true;
-    },
-    async session({ session, token }) {
-      // Add user ID to session
-      session.user.id = token.sub;
-      return session;
-    },
-  },
+@Controller('api/auth')
+export class AuthController {
+  @Get('google')
+  @UseGuards(AuthGuard('google'))
+  async googleAuth() {}
+  
+  @Get('google/callback')
+  @UseGuards(AuthGuard('google'))
+  async googleAuthCallback(@Req() req, @Res() res) {
+    // Generate JWT token
+    // Redirect to frontend with token
+  }
+  
+  @Get('github')
+  @UseGuards(AuthGuard('github'))
+  async githubAuth() {}
+  
+  // Similar for Apple and Microsoft
 }
+```
 
-const handler = NextAuth(authOptions)
-export { handler as GET, handler as POST }
+**projects.controller.ts**:
+```typescript
+@Controller('api/projects')
+@UseGuards(JwtAuthGuard)
+export class ProjectsController {
+  @Get()
+  async findAll(@User() user) {
+    // GET /api/projects - List user's projects
+  }
+  
+  @Post()
+  async create(@Body() dto: CreateProjectDto, @User() user) {
+    // POST /api/projects - Create new project
+    // Validates with class-validator
+    // Calls ProjectsService (Process Layer)
+  }
+  
+  @Get(':id')
+  async findOne(@Param('id') id: string) {
+    // GET /api/projects/:id
+  }
+  
+  @Put(':id')
+  async update(@Param('id') id: string, @Body() dto: UpdateProjectDto) {
+    // PUT /api/projects/:id
+  }
+  
+  @Delete(':id')
+  async remove(@Param('id') id: string) {
+    // DELETE /api/projects/:id
+  }
+}
+```
+
+**tasks.controller.ts**:
+```typescript
+@Controller('api/tasks')
+@UseGuards(JwtAuthGuard)
+export class TasksController {
+  @Get()
+  async findAll(@User() user) {
+    // GET /api/tasks
+  }
+  
+  @Post()
+  async create(@Body() dto: CreateTaskDto, @User() user) {
+    // POST /api/tasks
+    // Validates time values (positive numbers)
+  }
+  
+  @Get(':id')
+  async findOne(@Param('id') id: string) {}
+  
+  @Put(':id')
+  async update(@Param('id') id: string, @Body() dto: UpdateTaskDto) {}
+  
+  @Delete(':id')
+  async remove(@Param('id') id: string) {}
+}
+```
+
+**analytics.controller.ts**:
+```typescript
+@Controller('api/analytics')
+@UseGuards(JwtAuthGuard)
+export class AnalyticsController {
+  @Get('overview')
+  async getOverview(@User() user) {
+    // GET /api/analytics/overview - Overall statistics
+  }
+  
+  @Get('by-project')
+  async getByProject(@User() user) {
+    // GET /api/analytics/by-project - Project breakdown
+  }
+  
+  @Get('chart-data')
+  async getChartData(@User() user) {
+    // GET /api/analytics/chart-data - Chart-ready data
+  }
+}
+```
+
+**ai.controller.ts**:
+```typescript
+@Controller('api/ai')
+@UseGuards(JwtAuthGuard)
+export class AIController {
+  @Post('chat')
+  async chat(@Body() dto: ChatMessageDto, @User() user) {
+    // POST /api/ai/chat - Chat with AI
+    // Calls AI Orchestrator Service
+  }
+  
+  @Get('history')
+  async getHistory(@User() user) {
+    // GET /api/ai/history - Get chat history
+  }
+  
+  @Post('estimate')
+  async estimate(@Body() dto: EstimateTaskDto, @User() user) {
+    // POST /api/ai/estimate - Estimate task times
+  }
+}
+```
+
+#### [NEW] [backend/src/auth/strategies/](file:///Users/aaranvi/dev/ai/antigravity-demo/ai-productivity-benchmark/backend/src/auth/strategies/)
+
+**OAuth Authentication Strategies** - Passport.js with 4 providers:
+
+**google.strategy.ts**:
+```typescript
+@Injectable()
+export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
+  constructor() {
+    super({
+      clientID: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      callbackURL: process.env.GOOGLE_CALLBACK_URL,
+      scope: ['email', 'profile'],
+    });
+  }
+  
+  async validate(accessToken: string, refreshToken: string, profile: any) {
+    const { id, emails, displayName } = profile;
+    return {
+      provider: 'google',
+      providerId: id,
+      email: emails[0].value,
+      name: displayName,
+    };
+  }
+}
+```
+
+**github.strategy.ts**, **apple.strategy.ts**, **microsoft.strategy.ts** - Similar implementations
+
+**jwt.strategy.ts**:
+```typescript
+@Injectable()
+export class JwtStrategy extends PassportStrategy(Strategy) {
+  constructor() {
+    super({
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      secretOrKey: process.env.JWT_SECRET,
+    });
+  }
+  
+  async validate(payload: any) {
+    return { userId: payload.sub, email: payload.email };
+  }
+}
 ```
 
 **Environment Variables Required:**
