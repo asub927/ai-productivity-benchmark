@@ -25,15 +25,17 @@ WORKDIR /app
 COPY package*.json ./
 COPY prisma ./prisma/
 
-# Install only production dependencies
-RUN npm ci --only=production
+# Install production dependencies AND prisma (needed for generate)
+RUN npm ci --only=production && npm install -D prisma
+
+# Generate Prisma Client
+RUN npx prisma generate
 
 # Copy built assets from builder stage
 COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 
 # Expose port
 EXPOSE 3000
 
-# Start the application
-CMD ["npm", "run", "start:prod"]
+# Start the application (NestJS builds to dist/src/main.js by default)
+CMD ["node", "dist/src/main"]
