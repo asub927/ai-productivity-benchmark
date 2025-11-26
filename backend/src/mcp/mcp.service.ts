@@ -7,7 +7,6 @@ import * as express from 'express';
 @Injectable()
 export class McpService implements OnModuleInit {
     private server: McpServer;
-    private transport: SSEServerTransport;
     private readonly logger = new Logger(McpService.name);
     private tools: Map<string, any> = new Map();
 
@@ -44,9 +43,16 @@ export class McpService implements OnModuleInit {
 
     // Method to attach SSE transport to an Express app
     async attachToExpress(app: express.Application, path: string = '/sse') {
-        this.transport = new SSEServerTransport(path, app as any);
-        await this.server.connect(this.transport);
-        this.logger.log(`MCP Server attached to ${path}`);
+        this.logger.log(`Setting up MCP SSE endpoint at ${path}`);
+
+        // Create a route handler that will handle SSE connections
+        app.get(path, async (req, res) => {
+            this.logger.log('New MCP SSE connection');
+            const transport = new SSEServerTransport(path, res);
+            await this.server.connect(transport);
+        });
+
+        this.logger.log(`MCP Server endpoint configured at ${path}`);
     }
 
     // Direct execution for internal agents (kept for backward compatibility if needed)

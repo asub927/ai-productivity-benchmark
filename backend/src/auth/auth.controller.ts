@@ -28,21 +28,6 @@ export class AuthController {
         res.redirect(`${frontendUrl}/auth/callback?token=${token.access_token}`);
     }
 
-    // GitHub OAuth
-    @Get('github')
-    @UseGuards(AuthGuard('github'))
-    async githubAuth() {
-        // Initiates GitHub OAuth flow
-    }
-
-    @Get('github/callback')
-    @UseGuards(AuthGuard('github'))
-    async githubAuthCallback(@Req() req, @Res() res: Response) {
-        const token = await this.authService.generateJwtToken(req.user);
-        const frontendUrl = this.configService.get('FRONTEND_URL');
-
-        res.redirect(`${frontendUrl}/auth/callback?token=${token.access_token}`);
-    }
 
     // Get current user
     @Get('me')

@@ -47,7 +47,7 @@ steps:
       - '--port'
       - '3000'
       - '--set-env-vars'
-      - 'DATABASE_URL=$_DATABASE_URL,GEMINI_API_KEY=$_GEMINI_API_KEY,JWT_SECRET=$_JWT_SECRET'
+      - 'DATABASE_URL=$_DATABASE_URL,GEMINI_API_KEY=$_GEMINI_API_KEY,JWT_SECRET=$_JWT_SECRET,GOOGLE_CLIENT_ID=$_GOOGLE_CLIENT_ID,GOOGLE_CLIENT_SECRET=$_GOOGLE_CLIENT_SECRET,FRONTEND_URL=$_FRONTEND_URL'
 
   # ==========================================
   # 5. Deploy Python Agent Service
@@ -66,7 +66,7 @@ steps:
       - 'managed'
       - '--allow-unauthenticated'
       - '--set-env-vars'
-      - 'NESTJS_MCP_URL=https://ai-productivity-benchmark-backend-uc.a.run.app/api/mcp/sse,GEMINI_API_KEY=$_GEMINI_API_KEY'
+      - 'NESTJS_MCP_URL=https://ai-productivity-benchmark-backend-csyt6j5toa-ue.a.run.app/api/mcp/sse,GEMINI_API_KEY=$_GEMINI_API_KEY'
 
   # ==========================================
   # 6. Deploy Frontend
@@ -94,3 +94,6 @@ substitutions:
   _DATABASE_URL: ''
   _GEMINI_API_KEY: ''
   _JWT_SECRET: ''
+  _GOOGLE_CLIENT_ID: ''
+  _GOOGLE_CLIENT_SECRET: ''
+  _FRONTEND_URL: ''
