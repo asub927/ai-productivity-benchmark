@@ -15,12 +15,6 @@ async function bootstrap() {
   // Enable CORS
   app.enableCors();
 
-  // Attach MCP SSE endpoint
-  const mcpService = app.get(McpService);
-  // Get underlying Express app
-  const expressApp = app.getHttpAdapter().getInstance();
-  await mcpService.attachToExpress(expressApp, '/api/mcp/sse');
-
   const configService = app.get(ConfigService);
   app.enableCors({
     origin: process.env.FRONTEND_URL || ['http://localhost:5173', 'http://localhost:3000'],
