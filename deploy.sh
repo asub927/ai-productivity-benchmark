@@ -36,14 +36,19 @@ if [ -z "$GOOGLE_CLIENT_SECRET" ]; then
 fi
 
 # Set FRONTEND_URL for production (will be updated after first deployment)
-export FRONTEND_URL="${FRONTEND_URL:-https://ai-productivity-benchmark-frontend-uc.a.run.app}"
+export FRONTEND_URL="${FRONTEND_URL:-https://ai-productivity-benchmark-frontend-csyt6j5toa-ue.a.run.app}"
+
+# Set GOOGLE_CALLBACK_URL for OAuth
+export GOOGLE_CALLBACK_URL="${GOOGLE_CALLBACK_URL:-https://ai-productivity-benchmark-backend-csyt6j5toa-ue.a.run.app/api/auth/google/callback}"
 
 # Submit build to Cloud Build
 echo "Submitting build to Cloud Build..."
 gcloud builds submit --config cloudbuild.yaml \
-    --substitutions=_DATABASE_URL="$DATABASE_URL",_GEMINI_API_KEY="$GEMINI_API_KEY",_JWT_SECRET="$JWT_SECRET",_GOOGLE_CLIENT_ID="$GOOGLE_CLIENT_ID",_GOOGLE_CLIENT_SECRET="$GOOGLE_CLIENT_SECRET",_FRONTEND_URL="$FRONTEND_URL" .
+    --substitutions=_DATABASE_URL="$DATABASE_URL",_GEMINI_API_KEY="$GEMINI_API_KEY",_JWT_SECRET="$JWT_SECRET",_GOOGLE_CLIENT_ID="$GOOGLE_CLIENT_ID",_GOOGLE_CLIENT_SECRET="$GOOGLE_CLIENT_SECRET",_GOOGLE_CALLBACK_URL="$GOOGLE_CALLBACK_URL",_FRONTEND_URL="$FRONTEND_URL" .
 
 echo "Deployment complete!"
 echo "Frontend: $(gcloud run services describe ai-productivity-benchmark-frontend --platform managed --region us-east1 --format 'value(status.url)')"
 echo "Backend: $(gcloud run services describe ai-productivity-benchmark-backend --platform managed --region us-east1 --format 'value(status.url)')"
-echo "Python Agent: $(gcloud run services describe ai-productivity-benchmark-python --platform managed --region us-east1 --format 'value(status.url)')"
+echo ""
+echo "Note: Python Agent Service runs locally with stdio transport."
+echo "To run it: cd python-agent-service && ./run_local.sh"
