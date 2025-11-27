@@ -5,6 +5,7 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: 
       - 'build'
+      - '--no-cache'
       - '--build-arg'
       - 'VITE_API_URL=https://ai-productivity-benchmark-backend-csyt6j5toa-ue.a.run.app/api'
       - '-t'
