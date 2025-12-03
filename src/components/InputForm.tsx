@@ -54,6 +54,7 @@ const InputForm: React.FC<InputFormProps> = ({ onAddTask, onClear }) => {
                     <label className={styles.label}>Project Name</label>
                     {projects.length > 0 ? (
                         <select
+                            data-testid="project-select"
                             value={selectedProjectId}
                             onChange={handleProjectChange}
                             className={styles.select}
@@ -73,6 +74,7 @@ const InputForm: React.FC<InputFormProps> = ({ onAddTask, onClear }) => {
                 <div className={styles.inputGroup}>
                     <label className={styles.label}>Activity</label>
                     <select
+                        data-testid="activity-select"
                         value={task}
                         onChange={(e) => setTask(e.target.value)}
                         className={styles.select}
@@ -88,6 +90,7 @@ const InputForm: React.FC<InputFormProps> = ({ onAddTask, onClear }) => {
                 <div className={styles.inputGroup}>
                     <label className={styles.label} style={{ color: 'var(--color-secondary)' }}>Human + AI</label>
                     <input
+                        data-testid="ai-time-input"
                         type="number"
                         placeholder="Enter time in minutes"
                         value={aiTime}
@@ -100,6 +103,7 @@ const InputForm: React.FC<InputFormProps> = ({ onAddTask, onClear }) => {
                 <div className={styles.inputGroup}>
                     <label className={styles.label} style={{ color: 'var(--color-primary)' }}>Human Only</label>
                     <input
+                        data-testid="human-time-input"
                         type="number"
                         placeholder="Enter time in minutes"
                         value={humanTime}
