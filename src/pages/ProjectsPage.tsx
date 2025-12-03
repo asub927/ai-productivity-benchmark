@@ -66,6 +66,7 @@ const ProjectsPage: React.FC = () => {
                 <div className={styles.createSection}>
                     <form onSubmit={handleAddProject} className={styles.createForm}>
                         <input
+                            data-testid="project-name-input"
                             type="text"
                             placeholder="Project Name"
                             value={newProjectName}
@@ -74,13 +75,14 @@ const ProjectsPage: React.FC = () => {
                             autoFocus
                         />
                         <input
+                            data-testid="initial-task-input"
                             type="text"
                             placeholder="Initial Task (Required)"
                             value={initialTask}
                             onChange={(e) => setInitialTask(e.target.value)}
                             className={styles.input}
                         />
-                        <button type="submit" className={styles.saveButton} disabled={!newProjectName.trim() || !initialTask.trim()}>
+                        <button data-testid="save-project-button" type="submit" className={styles.saveButton} disabled={!newProjectName.trim() || !initialTask.trim()}>
                             Save Project
                         </button>
                     </form>
@@ -106,7 +108,7 @@ const ProjectsPage: React.FC = () => {
                         ) : (
                             projects.map(project => (
                                 <React.Fragment key={project.id}>
-                                    <tr className={`${styles.tr} ${expandedProjectId === project.id ? styles.trExpanded : ''}`}>
+                                    <tr data-testid={`project-row-${project.name}`} className={`${styles.tr} ${expandedProjectId === project.id ? styles.trExpanded : ''}`}>
                                         <td className={styles.td}>
                                             <span className={styles.projectName}>{project.name}</span>
                                         </td>
